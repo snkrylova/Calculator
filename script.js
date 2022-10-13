@@ -1,12 +1,22 @@
 "use strict";
 
+const OPERATOR_ADDITION = "+";
+const OPERATOR_SUBTRACTION = "-";
+const OPERATOR_MULTIPLICATION = "*";
+const OPERATOR_DIVISION = "/";
+const OPERATOR_PERCENT = "%";
+const OPERATOR_POINT = ".";
+const OPERATOR_EQUAL = "=";
+const OPERATOR_CLEAR = "clear";
+const OPERATOR_EMPTY_STRING = "";
+
 const state = {
-  number1: "",
-  number2: "",
-  operator: "",
-  specialOperator: "",
-  checkValue: "",
-  result: "",
+  number1: OPERATOR_EMPTY_STRING,
+  number2: OPERATOR_EMPTY_STRING,
+  operator: OPERATOR_EMPTY_STRING,
+  specialOperator: OPERATOR_EMPTY_STRING,
+  checkValue: OPERATOR_EMPTY_STRING,
+  result: OPERATOR_EMPTY_STRING,
 };
 
 const buttons = document.querySelector(".buttons");
@@ -20,14 +30,15 @@ buttons.addEventListener("click", function (event) {
   state.checkValue = event.target.value;
 
   if (
-    state.number1 === "" ||
-    state.number1.toString().slice(-1) === "." ||
-    state.operator === ""
+    state.number1 === OPERATOR_EMPTY_STRING ||
+    state.number1.toString().slice(-1) === OPERATOR_POINT ||
+    state.operator === OPERATOR_EMPTY_STRING
   ) {
     state.number1 += state.checkValue;
-  } else if (state.number1 === "" && state.checkValue === "-") {
-    state.number1 += "-";
-  } else if (state.number1 !== "" && state.operator !== "") {
+  } else if (
+    state.number1 !== OPERATOR_EMPTY_STRING &&
+    state.operator !== OPERATOR_EMPTY_STRING
+  ) {
     state.number2 += state.checkValue;
   }
 
@@ -41,12 +52,15 @@ buttons.addEventListener("click", function (event) {
 
   state.checkValue = event.target.value;
 
-  if (state.number1 === "") {
-    state.checkValue = "";
-  } else if (state.checkValue !== "=") {
-    if (state.checkValue === "." || state.checkValue === "clear") {
+  if (state.number1 === OPERATOR_EMPTY_STRING) {
+    state.checkValue = OPERATOR_EMPTY_STRING;
+  } else if (state.checkValue !== OPERATOR_EQUAL) {
+    if (
+      state.checkValue === OPERATOR_POINT ||
+      state.checkValue === OPERATOR_CLEAR
+    ) {
       state.specialOperator = state.checkValue;
-    } else if (state.operator !== "") {
+    } else if (state.operator !== OPERATOR_EMPTY_STRING) {
       state.operator = state.checkValue;
       output.value = state.number1;
     } else {
@@ -62,57 +76,51 @@ buttons.addEventListener("click", function (event) {
 function checkOperator() {
   checkOperatorSpecial();
 
-  if (state.checkValue === "=") {
+  if (state.checkValue === OPERATOR_EQUAL) {
     checkOperatorUsual();
 
     finishCalculation();
   }
 }
 
-function fixedNumber(result) {
-  result = result.toFixed(6);
-  while (
-    (result.toString().includes(".") && result.toString().slice(-1) === "0") ||
-    result.toString().slice(-1) === "."
-  ) {
-    result = result.toString().slice(0, -1);
-  }
-  return result;
+function fixedNumber(number) {
+  let numberFixed = Number(number.toFixed(6));
+  return numberFixed;
 }
 
 function finishCalculation() {
   output.value = state.result;
   state.number1 = state.result;
-  state.number2 = "";
-  state.operator = "";
-  state.specialOperator = "";
+  state.number2 = OPERATOR_EMPTY_STRING;
+  state.operator = OPERATOR_EMPTY_STRING;
+  state.specialOperator = OPERATOR_EMPTY_STRING;
 }
 
 function clearAll() {
-  output.value = "";
-  state.number1 = "";
-  state.number2 = "";
-  state.operator = "";
-  state.specialOperator = "";
+  output.value = OPERATOR_EMPTY_STRING;
+  state.number1 = OPERATOR_EMPTY_STRING;
+  state.number2 = OPERATOR_EMPTY_STRING;
+  state.operator = OPERATOR_EMPTY_STRING;
+  state.specialOperator = OPERATOR_EMPTY_STRING;
 }
 
 function checkOperatorSpecial() {
   switch (state.specialOperator) {
-    case "clear":
+    case OPERATOR_CLEAR:
       clearAll();
       break;
-    case ".":
+    case OPERATOR_POINT:
       if (
-        state.number1 !== "" &&
-        !state.number1.toString().includes(".") &&
-        state.number2 === ""
+        state.number1 !== OPERATOR_EMPTY_STRING &&
+        !state.number1.toString().includes(OPERATOR_POINT) &&
+        state.number2 === OPERATOR_EMPTY_STRING
       ) {
-        state.number1 += ".";
+        state.number1 += OPERATOR_POINT;
       } else if (
-        state.number2 !== "" &&
-        !state.number2.toString().includes(".")
+        state.number2 !== OPERATOR_EMPTY_STRING &&
+        !state.number2.toString().includes(OPERATOR_POINT)
       ) {
-        state.number2 += ".";
+        state.number2 += OPERATOR_POINT;
       }
       break;
   }
@@ -120,23 +128,23 @@ function checkOperatorSpecial() {
 
 function checkOperatorUsual() {
   switch (state.operator) {
-    case "+":
+    case OPERATOR_ADDITION:
       state.result = +state.number1 + +state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case "-":
+    case OPERATOR_SUBTRACTION:
       state.result = state.number1 - state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case "/":
+    case OPERATOR_DIVISION:
       state.result = state.number1 / state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case "*":
+    case OPERATOR_MULTIPLICATION:
       state.result = state.number1 * state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case "%":
+    case OPERATOR_PERCENT:
       state.result = (state.number1 * state.number2) / 100;
       state.result = fixedNumber(state.result);
       break;
