@@ -1,57 +1,57 @@
-'use strict';
+"use strict";
 
 const state = {
-  number1: '',
-  number2: '',
-  operator: '',
-  specialOperator: '',
-  checkValue: '',
-  result: ''
+  number1: "",
+  number2: "",
+  operator: "",
+  specialOperator: "",
+  checkValue: "",
+  result: "",
 };
 
-const buttons = document.querySelector('.buttons');
-const output = document.querySelector('.output');
+const buttons = document.querySelector(".buttons");
+const output = document.querySelector(".output");
 
-buttons.addEventListener('click', function(event) {
-
-  if (!event.target.classList.contains('number')){
+buttons.addEventListener("click", function (event) {
+  if (!event.target.classList.contains("number")) {
     return;
   }
 
   state.checkValue = event.target.value;
 
-  if (state.number1 === '' || 
-     state.number1.toString().slice(-1) === '.' || 
-     state.operator === ''){
+  if (
+    state.number1 === "" ||
+    state.number1.toString().slice(-1) === "." ||
+    state.operator === ""
+  ) {
     state.number1 += state.checkValue;
-  } else if (state.number1 === '' && state.checkValue === '-'){
-      state.number1 += '-';
-  } else if (state.number1 !== '' && state.operator !== ''){
-      state.number2 += state.checkValue;
+  } else if (state.number1 === "" && state.checkValue === "-") {
+    state.number1 += "-";
+  } else if (state.number1 !== "" && state.operator !== "") {
+    state.number2 += state.checkValue;
   }
 
   output.value += state.checkValue;
 });
 
-buttons.addEventListener('click', function(event) {
-
-  if (!event.target.classList.contains('operator')){
+buttons.addEventListener("click", function (event) {
+  if (!event.target.classList.contains("operator")) {
     return;
   }
 
   state.checkValue = event.target.value;
 
-  if (state.number1 === ''){
-    state.checkValue = '';
-  } else if (state.checkValue !== '='){
-      if (state.checkValue === '.' || state.checkValue === 'clear'){
-        state.specialOperator = state.checkValue;
-      } else if (state.operator !== ''){
-          state.operator = state.checkValue;
-          output.value = state.number1;
-      } else {
-          state.operator = state.checkValue;
-      }
+  if (state.number1 === "") {
+    state.checkValue = "";
+  } else if (state.checkValue !== "=") {
+    if (state.checkValue === "." || state.checkValue === "clear") {
+      state.specialOperator = state.checkValue;
+    } else if (state.operator !== "") {
+      state.operator = state.checkValue;
+      output.value = state.number1;
+    } else {
+      state.operator = state.checkValue;
+    }
   }
 
   output.value += state.checkValue;
@@ -59,81 +59,85 @@ buttons.addEventListener('click', function(event) {
   checkOperator();
 });
 
-function checkOperator(){
-
+function checkOperator() {
   checkOperatorSpecial();
 
-  if (state.checkValue === '='){
+  if (state.checkValue === "=") {
     checkOperatorUsual();
-    
+
     finishCalculation();
   }
 }
 
-function fixedNumber(result){
+function fixedNumber(result) {
   result = result.toFixed(6);
-  while (result.toString().includes('.') &&
-        result.toString().slice(-1) === '0' ||
-        result.toString().slice(-1) === '.'){
-    result = result.toString().slice(0,-1);
+  while (
+    (result.toString().includes(".") && result.toString().slice(-1) === "0") ||
+    result.toString().slice(-1) === "."
+  ) {
+    result = result.toString().slice(0, -1);
   }
   return result;
 }
 
-function finishCalculation(){
+function finishCalculation() {
   output.value = state.result;
   state.number1 = state.result;
-  state.number2 = '';
-  state.operator = ''; 
-  state.specialOperator = '';
+  state.number2 = "";
+  state.operator = "";
+  state.specialOperator = "";
 }
 
-function clearAll(){
-  output.value = '';
-  state.number1 = '';
-  state.number2 = '';
-  state.operator = '';
-  state.specialOperator = '';
+function clearAll() {
+  output.value = "";
+  state.number1 = "";
+  state.number2 = "";
+  state.operator = "";
+  state.specialOperator = "";
 }
 
-function checkOperatorSpecial(){
-  switch (state.specialOperator){
-    case 'clear':
+function checkOperatorSpecial() {
+  switch (state.specialOperator) {
+    case "clear":
       clearAll();
       break;
-    case '.':
-      if (state.number1 !== '' && 
-         (!state.number1.toString().includes('.')) &&
-         state.number2 === ''){
-        state.number1 += '.';
-      } else if (state.number2 !== '' &&
-                (!state.number2.toString().includes('.'))){
-            state.number2 += '.';
+    case ".":
+      if (
+        state.number1 !== "" &&
+        !state.number1.toString().includes(".") &&
+        state.number2 === ""
+      ) {
+        state.number1 += ".";
+      } else if (
+        state.number2 !== "" &&
+        !state.number2.toString().includes(".")
+      ) {
+        state.number2 += ".";
       }
       break;
   }
 }
 
-function checkOperatorUsual(){
-  switch (state.operator){
-    case '+':
+function checkOperatorUsual() {
+  switch (state.operator) {
+    case "+":
       state.result = +state.number1 + +state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case '-':
+    case "-":
       state.result = state.number1 - state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case '/':
+    case "/":
       state.result = state.number1 / state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case '*':
+    case "*":
       state.result = state.number1 * state.number2;
       state.result = fixedNumber(state.result);
       break;
-    case '%':
-      state.result = state.number1 * state.number2 / 100;
+    case "%":
+      state.result = (state.number1 * state.number2) / 100;
       state.result = fixedNumber(state.result);
       break;
     default:
