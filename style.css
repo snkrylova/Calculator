@@ -5,7 +5,7 @@ body{
 
 .calculator{
     background-color:rgb(115, 83, 212);
-    margin: 15% auto;
+    margin: 10px auto;
     width: 335px;
     padding: 5px;
     border: 2px solid black;
@@ -52,7 +52,7 @@ body{
     box-shadow: 0px 3px rgba(0, 0, 0, 0.2);
 }
 
-.numbers #zero{
+.zero{
     width: 200px;
 }
 
@@ -76,16 +76,29 @@ button:active{
     background-color: rgb(205, 105, 238);
 }
 
-.operator#clear{
+.clear{
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
 }
 
-.operator#clear:hover{
+.clear:hover{
     color: rgb(115, 83, 212);
 }
 
-.operator#clear:active{
+.clear:active{
     background-color: rgb(255, 255, 255);
     color: rgb(115, 83, 212);
+}
+
+#buttonAddCalculator{
+    margin: 5% auto;
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: bold;
+}
+
+.addCalculator{
+    display: flex;
+    flex-wrap: wrap;
+    height: min-content;
 }
