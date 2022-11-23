@@ -153,34 +153,37 @@ class Calculator {
   }
 
   createNumber() {
-    for (let i = 0; i < ARRAY_NUMBER_SIZE; i++) {
-      this.number[i].index = document.createElement("button");
-
+    this.number.forEach((item, i, number) => {
+      number = document.createElement("button");
       if (i !== 9) {
-        this.number[i].index.setAttribute("class", "number");
-      } else this.number[9].index.setAttribute("class", "number zero");
+        number.setAttribute("class", "number");
+      } else number.setAttribute("class", "number zero");
 
-      this.number[i].index.innerHTML = this.number[i].value;
-      this.number[i].index.setAttribute("value", this.number[i].value);
+      number.innerHTML = this.number[i].value;
 
-      this.numbersContainer.appendChild(this.number[i].index);
+      number.setAttribute("value", this.number[i].value);
 
-      //console.log(this.number[i].index + " " + this.number[i].value);
-    }
+      this.numbersContainer.appendChild(number);
+    });
   }
 
   createOperator() {
-    for (let i = 0; i < ARRAY_OPERATOR_SIZE; i++) {
-      this.operator[i].index = document.createElement("button");
+    this.operator.forEach((item, i, operator) => {
+      operator = document.createElement("button");
+      if (i !== 1 && i !== 7) {
+        operator.setAttribute("class", "operator");
+      } else if (i === 1) {
+        operator.setAttribute("class", "operator clear");
+      } else operator.setAttribute("class", "operator result");
 
-      this.operator[i].index.innerHTML = this.operator[i].value;
+      operator.innerHTML = this.operator[i].value;
 
-      this.operator[i].index.setAttribute("class", "operator");
+      operator.setAttribute("value", this.operator[i].value);
 
-      this.operator[i].index.setAttribute("value", this.operator[i].value);
+      console.log(operator);
 
-      this.operatorsContainer.appendChild(this.operator[i].index);
-    }
+      this.operatorsContainer.appendChild(operator);
+    });
   }
 
   render() {
@@ -255,11 +258,12 @@ class Calculator {
   }
 
   checkOperator() {
+    //console.log("check");
     this.checkOperatorSpecial();
 
     if (this.state.checkValue === OPERATOR_EQUAL) {
       this.checkOperatorUsual();
-
+      console.log("=");
       this.finishCalculation();
     }
   }
@@ -286,9 +290,11 @@ class Calculator {
   }
 
   checkOperatorSpecial() {
+    //console.log(this.state.specialOperator);
     switch (this.state.specialOperator) {
       case OPERATOR_CLEAR:
         this.clearAll();
+        //console.log("clear");
         break;
       case OPERATOR_POINT:
         if (
