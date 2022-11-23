@@ -7,152 +7,331 @@ const OPERATOR_DIVISION = "/";
 const OPERATOR_PERCENT = "%";
 const OPERATOR_POINT = ".";
 const OPERATOR_EQUAL = "=";
-const OPERATOR_CLEAR = "clear";
+const OPERATOR_CLEAR = "C";
 const OPERATOR_EMPTY_STRING = "";
-
-const state = {
-  number1: OPERATOR_EMPTY_STRING,
-  number2: OPERATOR_EMPTY_STRING,
-  operator: OPERATOR_EMPTY_STRING,
-  specialOperator: OPERATOR_EMPTY_STRING,
-  checkValue: OPERATOR_EMPTY_STRING,
-  result: OPERATOR_EMPTY_STRING,
-};
+const ARRAY_NUMBER_SIZE = 10;
+const ARRAY_OPERATOR_SIZE = 8;
 
 class Calculator {
   constructor(container) {
     this.container = container;
-    document.body.appendChild(this.container);
+    this.calcContainer = null;
+    this.buttonsContainer = null;
+    this.output = null;
+    this.numbersContainer = null;
+    this.operatorsContainer = null;
+
+    this.state = {
+      number1: OPERATOR_EMPTY_STRING,
+      number2: OPERATOR_EMPTY_STRING,
+      operator: OPERATOR_EMPTY_STRING,
+      specialOperator: OPERATOR_EMPTY_STRING,
+      checkValue: OPERATOR_EMPTY_STRING,
+      result: OPERATOR_EMPTY_STRING,
+    };
+
+    this.number = [
+      {
+        index: 0,
+        value: 7,
+      },
+      {
+        index: 1,
+        value: 8,
+      },
+      {
+        index: 2,
+        value: 9,
+      },
+      {
+        index: 3,
+        value: 4,
+      },
+      {
+        index: 4,
+        value: 5,
+      },
+      {
+        index: 5,
+        value: 6,
+      },
+      {
+        index: 6,
+        value: 1,
+      },
+      {
+        index: 7,
+        value: 2,
+      },
+      {
+        index: 8,
+        value: 3,
+      },
+      {
+        index: 9,
+        value: 0,
+      },
+    ];
+
+    this.operator = [
+      {
+        index: 0,
+        value: OPERATOR_PERCENT,
+      },
+      {
+        index: 1,
+        value: OPERATOR_CLEAR,
+      },
+      {
+        index: 2,
+        value: OPERATOR_ADDITION,
+      },
+      {
+        index: 3,
+        value: OPERATOR_SUBTRACTION,
+      },
+      {
+        index: 4,
+        value: OPERATOR_MULTIPLICATION,
+      },
+      {
+        index: 5,
+        value: OPERATOR_DIVISION,
+      },
+      {
+        index: 6,
+        value: OPERATOR_POINT,
+      },
+      {
+        index: 7,
+        value: OPERATOR_EQUAL,
+      },
+    ];
   }
 
   createCalculator() {
-    this.calc = document.createElement("div");
+    this.calcContainer = document.createElement("div");
 
-    //this.calc.setAttribute("class", "calculator");
+    this.calcContainer.setAttribute("class", "calculator");
 
-    let value = document.getElementById("buttonAddCalculator").value;
-    this.calc.setAttribute("class", "calculator" + " " + value);
-
-    this.container.appendChild(this.calc);
-
-    document.getElementById("buttonAddCalculator").value++;
+    this.container.appendChild(this.calcContainer);
   }
 
-  createInput() {
-    this.input = document.createElement("input");
+  createOutput() {
+    this.output = document.createElement("input");
 
-    this.input.setAttribute("type", "text");
-    this.input.setAttribute("class", "output");
-    this.input.setAttribute("value", "");
-    this.input.setAttribute("disabled", "disabled");
+    this.output.setAttribute("type", "text");
+    this.output.setAttribute("class", "output");
+    this.output.setAttribute("value", "");
+    this.output.setAttribute("disabled", "disabled");
 
-    this.calc.appendChild(this.input);
+    this.calcContainer.appendChild(this.output);
   }
 
-  createButtons() {
-    this.buttons = document.createElement("div");
+  createButtonsContainer() {
+    this.buttonsContainer = document.createElement("div");
 
-    this.buttons.setAttribute("class", "buttons");
+    this.buttonsContainer.setAttribute("class", "buttons");
 
-    this.calc.appendChild(this.buttons);
+    this.calcContainer.appendChild(this.buttonsContainer);
   }
 
-  createNumbers() {
-    this.numbers = document.createElement("div");
+  createNumbersContainer() {
+    this.numbersContainer = document.createElement("div");
 
-    this.numbers.setAttribute("class", "numbers");
+    this.numbersContainer.setAttribute("class", "numbers");
 
-    this.buttons.appendChild(this.numbers);
+    this.buttonsContainer.appendChild(this.numbersContainer);
   }
 
-  createOperators() {
-    this.operators = document.createElement("div");
+  createOperatorsContainer() {
+    this.operatorsContainer = document.createElement("div");
 
-    this.operators.setAttribute("class", "operators");
+    this.operatorsContainer.setAttribute("class", "operators");
 
-    this.buttons.appendChild(this.operators);
+    this.buttonsContainer.appendChild(this.operatorsContainer);
   }
 
   createNumber() {
-    this.number = new Array(10);
+    for (let i = 0; i < ARRAY_NUMBER_SIZE; i++) {
+      this.number[i].index = document.createElement("button");
 
-    for (let i = 0; i < 10; i++) {
-      this.number[i] = document.createElement("button");
-    }
+      if (i !== 9) {
+        this.number[i].index.setAttribute("class", "number");
+      } else this.number[9].index.setAttribute("class", "number zero");
 
-    this.number[9].innerHTML = 0;
-    this.number[8].innerHTML = 3;
-    this.number[7].innerHTML = 2;
-    this.number[6].innerHTML = 1;
-    this.number[5].innerHTML = 6;
-    this.number[4].innerHTML = 5;
-    this.number[3].innerHTML = 4;
-    this.number[2].innerHTML = 9;
-    this.number[1].innerHTML = 8;
-    this.number[0].innerHTML = 7;
+      this.number[i].index.innerHTML = this.number[i].value;
+      this.number[i].index.setAttribute("value", this.number[i].value);
 
-    for (let i = 0; i < 9; i++) {
-      this.number[i].setAttribute("class", "number");
-    }
-    this.number[9].setAttribute("class", "number zero");
+      this.numbersContainer.appendChild(this.number[i].index);
 
-    this.number[9].setAttribute("value", 0);
-    this.number[8].setAttribute("value", 3);
-    this.number[7].setAttribute("value", 2);
-    this.number[6].setAttribute("value", 1);
-    this.number[5].setAttribute("value", 6);
-    this.number[4].setAttribute("value", 5);
-    this.number[3].setAttribute("value", 4);
-    this.number[2].setAttribute("value", 9);
-    this.number[1].setAttribute("value", 8);
-    this.number[0].setAttribute("value", 7);
-
-    for (let i = 0; i < 10; i++) {
-      this.numbers.appendChild(this.number[i]);
+      //console.log(this.number[i].index + " " + this.number[i].value);
     }
   }
 
   createOperator() {
-    this.operator = new Array(8);
+    for (let i = 0; i < ARRAY_OPERATOR_SIZE; i++) {
+      this.operator[i].index = document.createElement("button");
 
-    for (let i = 0; i < 8; i++) {
-      this.operator[i] = document.createElement("button");
+      this.operator[i].index.innerHTML = this.operator[i].value;
+
+      this.operator[i].index.setAttribute("class", "operator");
+
+      this.operator[i].index.setAttribute("value", this.operator[i].value);
+
+      this.operatorsContainer.appendChild(this.operator[i].index);
     }
+  }
 
-    this.operator[0].innerHTML = "%";
-    this.operator[1].innerHTML = "C";
-    this.operator[2].innerHTML = "+";
-    this.operator[3].innerHTML = "-";
-    this.operator[4].innerHTML = "*";
-    this.operator[5].innerHTML = "/";
-    this.operator[6].innerHTML = ".";
-    this.operator[7].innerHTML = "=";
+  render() {
+    this.createCalculator();
+    this.createOutput();
+    this.createButtonsContainer();
+    this.createNumbersContainer();
+    this.createOperatorsContainer();
+    this.createNumber();
+    this.createOperator();
 
-    for (let i = 0; i < 8; i++) {
-      this.operator[i].setAttribute("class", "operator");
-      if (i === 0) {
-        this.operator[i].setAttribute("value", "%");
-      } else if (i === 1) {
-        this.operator[i].setAttribute("class", "operator clear");
-        this.operator[i].setAttribute("value", "clear");
-      } else if (i === 2) {
-        this.operator[i].setAttribute("value", "+");
-      } else if (i === 3) {
-        this.operator[i].setAttribute("value", "-");
-      } else if (i === 4) {
-        this.operator[i].setAttribute("value", "*");
-      } else if (i === 5) {
-        this.operator[i].setAttribute("value", "/");
-      } else if (i === 6) {
-        this.operator[i].setAttribute("value", ".");
-      } else {
-        this.operator[i].setAttribute("class", "operator result");
-        this.operator[i].setAttribute("value", "=");
+    this.onclickNumber();
+    this.onclickOperator();
+  }
+
+  onclickNumber() {
+    this.buttonsContainer.addEventListener("click", (event) => {
+      if (!event.target.classList.contains("number")) {
+        return;
       }
-    }
 
-    for (let i = 0; i < 8; i++) {
-      this.operators.appendChild(this.operator[i]);
+      this.state.checkValue = +event.target.getAttribute("value");
+
+      if (
+        this.state.number1 === OPERATOR_EMPTY_STRING ||
+        this.state.number1.toString().slice(-1) === OPERATOR_POINT ||
+        this.state.operator === OPERATOR_EMPTY_STRING
+      ) {
+        this.state.number1 += this.state.checkValue;
+      } else if (
+        this.state.number1 !== OPERATOR_EMPTY_STRING &&
+        this.state.operator !== OPERATOR_EMPTY_STRING
+      ) {
+        this.state.number2 += this.state.checkValue;
+      }
+
+      this.output.value += this.state.checkValue;
+
+      //console.log(this.state.number1 + " " + this.state.number2);
+    });
+  }
+
+  onclickOperator() {
+    this.buttonsContainer.addEventListener("click", (event) => {
+      if (!event.target.classList.contains("operator")) {
+        return;
+      }
+
+      this.state.checkValue = event.target.getAttribute("value");
+      //console.log(this.state.checkValue);
+
+      if (this.state.number1 === OPERATOR_EMPTY_STRING) {
+        this.state.checkValue = OPERATOR_EMPTY_STRING;
+      } else if (this.state.checkValue !== OPERATOR_EQUAL) {
+        if (
+          this.state.checkValue === OPERATOR_POINT ||
+          this.state.checkValue === OPERATOR_CLEAR
+        ) {
+          this.state.specialOperator = this.state.checkValue;
+        } else if (this.state.operator !== OPERATOR_EMPTY_STRING) {
+          this.state.operator = this.state.checkValue;
+          this.output.value = this.state.number1;
+        } else {
+          this.state.operator = this.state.checkValue;
+        }
+      }
+
+      this.output.value += this.state.checkValue;
+
+      this.checkOperator();
+    });
+  }
+
+  checkOperator() {
+    this.checkOperatorSpecial();
+
+    if (this.state.checkValue === OPERATOR_EQUAL) {
+      this.checkOperatorUsual();
+
+      this.finishCalculation();
+    }
+  }
+
+  fixedNumber(number) {
+    let numberFixed = Number(number.toFixed(6));
+    return numberFixed;
+  }
+
+  finishCalculation() {
+    this.output.value = this.state.result;
+    this.state.number1 = this.state.result;
+    this.state.number2 = OPERATOR_EMPTY_STRING;
+    this.state.operator = OPERATOR_EMPTY_STRING;
+    this.state.specialOperator = OPERATOR_EMPTY_STRING;
+  }
+
+  clearAll() {
+    this.output.value = OPERATOR_EMPTY_STRING;
+    this.state.number1 = OPERATOR_EMPTY_STRING;
+    this.state.number2 = OPERATOR_EMPTY_STRING;
+    this.state.operator = OPERATOR_EMPTY_STRING;
+    this.state.specialOperator = OPERATOR_EMPTY_STRING;
+  }
+
+  checkOperatorSpecial() {
+    switch (this.state.specialOperator) {
+      case OPERATOR_CLEAR:
+        this.clearAll();
+        break;
+      case OPERATOR_POINT:
+        if (
+          this.state.number1 !== OPERATOR_EMPTY_STRING &&
+          !this.state.number1.toString().includes(OPERATOR_POINT) &&
+          this.state.number2 === OPERATOR_EMPTY_STRING
+        ) {
+          this.state.number1 += OPERATOR_POINT;
+        } else if (
+          this.state.number2 !== OPERATOR_EMPTY_STRING &&
+          !this.state.number2.toString().includes(OPERATOR_POINT)
+        ) {
+          this.state.number2 += OPERATOR_POINT;
+        }
+        break;
+    }
+  }
+
+  checkOperatorUsual() {
+    switch (this.state.operator) {
+      case OPERATOR_ADDITION:
+        this.state.result = +this.state.number1 + +this.state.number2;
+        this.state.result = this.fixedNumber(this.state.result);
+        break;
+      case OPERATOR_SUBTRACTION:
+        this.state.result = this.state.number1 - this.state.number2;
+        this.state.result = this.fixedNumber(this.state.result);
+        break;
+      case OPERATOR_DIVISION:
+        this.state.result = this.state.number1 / this.state.number2;
+        this.state.result = this.fixedNumber(this.state.result);
+        break;
+      case OPERATOR_MULTIPLICATION:
+        this.state.result = this.state.number1 * this.state.number2;
+        this.state.result = this.fixedNumber(this.state.result);
+        break;
+      case OPERATOR_PERCENT:
+        this.state.result = (this.state.number1 * this.state.number2) / 100;
+        this.state.result = this.fixedNumber(this.state.result);
+        break;
+      default:
+        this.state.result = this.state.number1;
+        break;
     }
   }
 }
@@ -163,146 +342,6 @@ buttonAddCalc.addEventListener("click", function (event) {
   const classCalculator = new Calculator(
     document.querySelector(".addCalculator")
   );
-  classCalculator.createCalculator();
-  classCalculator.createInput();
-  classCalculator.createButtons();
-  classCalculator.createNumbers();
-  classCalculator.createOperators();
-  classCalculator.createNumber();
-  classCalculator.createOperator();
 
-  const buttons = document.querySelector(".buttons");
-  const output = document.querySelector(".output");
-
-  buttons.addEventListener("click", function (event) {
-    if (!event.target.classList.contains("number")) {
-      return;
-    }
-
-    state.checkValue = event.target.value;
-
-    if (
-      state.number1 === OPERATOR_EMPTY_STRING ||
-      state.number1.toString().slice(-1) === OPERATOR_POINT ||
-      state.operator === OPERATOR_EMPTY_STRING
-    ) {
-      state.number1 += state.checkValue;
-    } else if (
-      state.number1 !== OPERATOR_EMPTY_STRING &&
-      state.operator !== OPERATOR_EMPTY_STRING
-    ) {
-      state.number2 += state.checkValue;
-    }
-
-    output.value += state.checkValue;
-  });
-
-  buttons.addEventListener("click", function (event) {
-    if (!event.target.classList.contains("operator")) {
-      return;
-    }
-
-    state.checkValue = event.target.value;
-
-    if (state.number1 === OPERATOR_EMPTY_STRING) {
-      state.checkValue = OPERATOR_EMPTY_STRING;
-    } else if (state.checkValue !== OPERATOR_EQUAL) {
-      if (
-        state.checkValue === OPERATOR_POINT ||
-        state.checkValue === OPERATOR_CLEAR
-      ) {
-        state.specialOperator = state.checkValue;
-      } else if (state.operator !== OPERATOR_EMPTY_STRING) {
-        state.operator = state.checkValue;
-        output.value = state.number1;
-      } else {
-        state.operator = state.checkValue;
-      }
-    }
-
-    output.value += state.checkValue;
-
-    checkOperator();
-  });
-
-  function checkOperator() {
-    checkOperatorSpecial();
-
-    if (state.checkValue === OPERATOR_EQUAL) {
-      checkOperatorUsual();
-
-      finishCalculation();
-    }
-  }
-
-  function fixedNumber(number) {
-    let numberFixed = Number(number.toFixed(6));
-    return numberFixed;
-  }
-
-  function finishCalculation() {
-    output.value = state.result;
-    state.number1 = state.result;
-    state.number2 = OPERATOR_EMPTY_STRING;
-    state.operator = OPERATOR_EMPTY_STRING;
-    state.specialOperator = OPERATOR_EMPTY_STRING;
-  }
-
-  function clearAll() {
-    output.value = OPERATOR_EMPTY_STRING;
-    state.number1 = OPERATOR_EMPTY_STRING;
-    state.number2 = OPERATOR_EMPTY_STRING;
-    state.operator = OPERATOR_EMPTY_STRING;
-    state.specialOperator = OPERATOR_EMPTY_STRING;
-  }
-
-  function checkOperatorSpecial() {
-    switch (state.specialOperator) {
-      case OPERATOR_CLEAR:
-        clearAll();
-        break;
-      case OPERATOR_POINT:
-        if (
-          state.number1 !== OPERATOR_EMPTY_STRING &&
-          !state.number1.toString().includes(OPERATOR_POINT) &&
-          state.number2 === OPERATOR_EMPTY_STRING
-        ) {
-          state.number1 += OPERATOR_POINT;
-        } else if (
-          state.number2 !== OPERATOR_EMPTY_STRING &&
-          !state.number2.toString().includes(OPERATOR_POINT)
-        ) {
-          state.number2 += OPERATOR_POINT;
-        }
-        break;
-    }
-  }
-
-  function checkOperatorUsual() {
-    switch (state.operator) {
-      case OPERATOR_ADDITION:
-        state.result = +state.number1 + +state.number2;
-        state.result = fixedNumber(state.result);
-        break;
-      case OPERATOR_SUBTRACTION:
-        state.result = state.number1 - state.number2;
-        state.result = fixedNumber(state.result);
-        break;
-      case OPERATOR_DIVISION:
-        state.result = state.number1 / state.number2;
-        state.result = fixedNumber(state.result);
-        break;
-      case OPERATOR_MULTIPLICATION:
-        state.result = state.number1 * state.number2;
-        state.result = fixedNumber(state.result);
-        break;
-      case OPERATOR_PERCENT:
-        state.result = (state.number1 * state.number2) / 100;
-        state.result = fixedNumber(state.result);
-        break;
-      default:
-        state.result = state.number1;
-        break;
-    }
-  }
+  classCalculator.render();
 });
