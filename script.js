@@ -9,8 +9,6 @@ const OPERATOR_POINT = ".";
 const OPERATOR_RESULT = "=";
 const OPERATOR_CLEAR = "C";
 const OPERATOR_EMPTY_STRING = "";
-const ARRAY_NUMBER_SIZE = 10;
-const ARRAY_OPERATOR_SIZE = 8;
 
 class Calculator {
   constructor(container) {
