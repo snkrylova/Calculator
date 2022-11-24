@@ -6,7 +6,7 @@ const OPERATOR_MULTIPLICATION = "*";
 const OPERATOR_DIVISION = "/";
 const OPERATOR_PERCENT = "%";
 const OPERATOR_POINT = ".";
-const OPERATOR_EQUAL = "=";
+const OPERATOR_RESULT = "=";
 const OPERATOR_CLEAR = "C";
 const OPERATOR_EMPTY_STRING = "";
 const ARRAY_NUMBER_SIZE = 10;
@@ -104,15 +104,28 @@ class Calculator {
       },
       {
         index: 7,
-        value: OPERATOR_EQUAL,
+        value: OPERATOR_RESULT,
       },
     ];
+
+    this.nameClass = {
+      CALCULATOR: "calculator",
+      OUTPUT: "output",
+      BUTTONS: "buttons",
+      NUMBERS: "numbers",
+      OPERATORS: "operators",
+      NUMBER: "number",
+      NUMBER_ZERO: "zero",
+      OPERATOR: "operator",
+      OPERATOR_CLEAR: "clear",
+      OPERATOR_RESULT: "result",
+    };
   }
 
   createCalculator() {
     this.calcContainer = document.createElement("div");
 
-    this.calcContainer.setAttribute("class", "calculator");
+    this.calcContainer.classList.add(this.nameClass.CALCULATOR);
 
     this.container.appendChild(this.calcContainer);
   }
@@ -120,8 +133,9 @@ class Calculator {
   createOutput() {
     this.output = document.createElement("input");
 
+    this.output.classList.add(this.nameClass.OUTPUT);
+
     this.output.setAttribute("type", "text");
-    this.output.setAttribute("class", "output");
     this.output.setAttribute("value", "");
     this.output.setAttribute("disabled", "disabled");
 
@@ -131,7 +145,7 @@ class Calculator {
   createButtonsContainer() {
     this.buttonsContainer = document.createElement("div");
 
-    this.buttonsContainer.setAttribute("class", "buttons");
+    this.buttonsContainer.classList.add(this.nameClass.BUTTONS);
 
     this.calcContainer.appendChild(this.buttonsContainer);
   }
@@ -139,7 +153,7 @@ class Calculator {
   createNumbersContainer() {
     this.numbersContainer = document.createElement("div");
 
-    this.numbersContainer.setAttribute("class", "numbers");
+    this.numbersContainer.classList.add(this.nameClass.NUMBERS);
 
     this.buttonsContainer.appendChild(this.numbersContainer);
   }
@@ -147,43 +161,45 @@ class Calculator {
   createOperatorsContainer() {
     this.operatorsContainer = document.createElement("div");
 
-    this.operatorsContainer.setAttribute("class", "operators");
+    this.operatorsContainer.classList.add(this.nameClass.OPERATORS);
 
     this.buttonsContainer.appendChild(this.operatorsContainer);
   }
 
   createNumber() {
-    this.number.forEach((item, i, number) => {
-      number = document.createElement("button");
-      if (i !== 9) {
-        number.setAttribute("class", "number");
-      } else number.setAttribute("class", "number zero");
+    for (let i = 0; i < this.number.length; i++) {
+      const number = document.createElement("button");
+
+      number.classList.add(this.nameClass.NUMBER);
+      if (this.number[i].value === 0) {
+        number.classList.add(this.nameClass.NUMBER_ZERO);
+      }
 
       number.innerHTML = this.number[i].value;
 
       number.setAttribute("value", this.number[i].value);
 
       this.numbersContainer.appendChild(number);
-    });
+    }
   }
 
   createOperator() {
-    this.operator.forEach((item, i, operator) => {
-      operator = document.createElement("button");
-      if (i !== 1 && i !== 7) {
-        operator.setAttribute("class", "operator");
-      } else if (i === 1) {
-        operator.setAttribute("class", "operator clear");
-      } else operator.setAttribute("class", "operator result");
+    for (let i = 0; i < this.operator.length; i++) {
+      const operator = document.createElement("button");
+
+      operator.classList.add(this.nameClass.OPERATOR);
+      if (this.operator[i].value === OPERATOR_CLEAR) {
+        operator.classList.add(this.nameClass.OPERATOR_CLEAR);
+      } else if (this.operator[i].value === OPERATOR_RESULT) {
+        operator.classList.add(this.nameClass.OPERATOR_RESULT);
+      }
 
       operator.innerHTML = this.operator[i].value;
 
       operator.setAttribute("value", this.operator[i].value);
 
-      console.log(operator);
-
       this.operatorsContainer.appendChild(operator);
-    });
+    }
   }
 
   render() {
@@ -201,7 +217,7 @@ class Calculator {
 
   onclickNumber() {
     this.buttonsContainer.addEventListener("click", (event) => {
-      if (!event.target.classList.contains("number")) {
+      if (!event.target.classList.contains(this.nameClass.NUMBER)) {
         return;
       }
 
@@ -212,7 +228,14 @@ class Calculator {
         this.state.number1.toString().slice(-1) === OPERATOR_POINT ||
         this.state.operator === OPERATOR_EMPTY_STRING
       ) {
-        this.state.number1 += this.state.checkValue;
+        if (
+          this.state.number1 === OPERATOR_EMPTY_STRING &&
+          this.state.checkValue === 0
+        ) {
+          this.state.checkValue = OPERATOR_EMPTY_STRING;
+        } else {
+          this.state.number1 += this.state.checkValue;
+        }
       } else if (
         this.state.number1 !== OPERATOR_EMPTY_STRING &&
         this.state.operator !== OPERATOR_EMPTY_STRING
@@ -221,23 +244,20 @@ class Calculator {
       }
 
       this.output.value += this.state.checkValue;
-
-      //console.log(this.state.number1 + " " + this.state.number2);
     });
   }
 
   onclickOperator() {
     this.buttonsContainer.addEventListener("click", (event) => {
-      if (!event.target.classList.contains("operator")) {
+      if (!event.target.classList.contains(this.nameClass.OPERATOR)) {
         return;
       }
 
       this.state.checkValue = event.target.getAttribute("value");
-      //console.log(this.state.checkValue);
 
       if (this.state.number1 === OPERATOR_EMPTY_STRING) {
         this.state.checkValue = OPERATOR_EMPTY_STRING;
-      } else if (this.state.checkValue !== OPERATOR_EQUAL) {
+      } else if (this.state.checkValue !== OPERATOR_RESULT) {
         if (
           this.state.checkValue === OPERATOR_POINT ||
           this.state.checkValue === OPERATOR_CLEAR
@@ -246,6 +266,7 @@ class Calculator {
         } else if (this.state.operator !== OPERATOR_EMPTY_STRING) {
           this.state.operator = this.state.checkValue;
           this.output.value = this.state.number1;
+          this.state.number2 = OPERATOR_EMPTY_STRING;
         } else {
           this.state.operator = this.state.checkValue;
         }
@@ -258,12 +279,11 @@ class Calculator {
   }
 
   checkOperator() {
-    //console.log("check");
     this.checkOperatorSpecial();
 
-    if (this.state.checkValue === OPERATOR_EQUAL) {
+    if (this.state.checkValue === OPERATOR_RESULT) {
       this.checkOperatorUsual();
-      console.log("=");
+
       this.finishCalculation();
     }
   }
@@ -290,11 +310,10 @@ class Calculator {
   }
 
   checkOperatorSpecial() {
-    //console.log(this.state.specialOperator);
     switch (this.state.specialOperator) {
       case OPERATOR_CLEAR:
         this.clearAll();
-        //console.log("clear");
+        console.log("clear");
         break;
       case OPERATOR_POINT:
         if (
