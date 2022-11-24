@@ -1,91 +1,105 @@
-body{
-    background-image: url("https://w-dog.ru/wallpapers/1/73/340209901543167/planeta-kosmos-art-tumannost.jpg");
-    background-size: cover;
+body {
+  background-image: url("https://w-dog.ru/wallpapers/1/73/340209901543167/planeta-kosmos-art-tumannost.jpg");
+  background-size: cover;
 }
 
-.calculator{
-    background-color:rgb(115, 83, 212);
-    margin: 15% auto;
-    width: 335px;
-    padding: 5px;
-    border: 2px solid black;
-    border-radius: 2%;
-    display: flex;
-    flex-wrap: wrap;
-    border-radius: 5%;
+.calculator {
+  background-color: rgb(115, 83, 212);
+  margin: 10px auto;
+  width: 335px;
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 2%;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 5%;
 }
 
-.output{
-    background-color: white;
-    width: 320px;
-    height: 50px;
-    font-size: 30px;
-    text-align: right;
-    margin: 5px;
-    border: 1px solid black;
+.output {
+  background-color: white;
+  width: 320px;
+  height: 50px;
+  font-size: 30px;
+  text-align: right;
+  margin: 5px;
+  border: 1px solid black;
 }
 
-.buttons{
-    display: flex; 
-    justify-content: space-between;
+.buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
-.numbers{
-    display: flex; 
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 200px;
+.numbers {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 200px;
 }
 
-.operators{
-    display: flex; 
-    flex-wrap: wrap;
-    width: 150px;
+.operators {
+  display: flex;
+  flex-wrap: wrap;
+  width: 150px;
 }
 
-.number, .operator{
-    width: 60px;
-    font-size: 30px;
-    border-radius: 100%;
-    margin: 3px;
-    background-color: rgb(211, 204, 239);
-    box-shadow: 0px 3px rgba(0, 0, 0, 0.2);
+.number,
+.operator {
+  width: 60px;
+  font-size: 30px;
+  border-radius: 100%;
+  margin: 3px;
+  background-color: rgb(211, 204, 239);
+  box-shadow: 0px 3px rgba(0, 0, 0, 0.2);
 }
 
-.numbers #zero{
-    width: 200px;
+.zero {
+  width: 200px;
 }
 
-button:hover{
-    background-color: rgb(171, 158, 225);
+button:hover {
+  background-color: rgb(171, 158, 225);
 }
 
-button:active{
-    background-color: rgb(140, 120, 221);
+button:active {
+  background-color: rgb(140, 120, 221);
 }
 
-.operator{
-    background-color: rgb(230, 181, 246);
+.operator {
+  background-color: rgb(230, 181, 246);
 }
 
-.operator:hover{
-    background-color: rgb(214, 141, 238);
+.operator:hover {
+  background-color: rgb(214, 141, 238);
 }
 
-.operator:active{
-    background-color: rgb(205, 105, 238);
+.operator:active {
+  background-color: rgb(205, 105, 238);
 }
 
-.operator#clear{
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
+.clear {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
 }
 
-.operator#clear:hover{
-    color: rgb(115, 83, 212);
+.clear:hover {
+  color: rgb(115, 83, 212);
 }
 
-.operator#clear:active{
-    background-color: rgb(255, 255, 255);
-    color: rgb(115, 83, 212);
+.clear:active {
+  background-color: rgb(255, 255, 255);
+  color: rgb(115, 83, 212);
+}
+
+#buttonAddCalculator {
+  margin: 5% auto;
+  display: flex;
+  flex-wrap: wrap;
+  font-weight: bold;
+}
+
+.addCalculator {
+  display: flex;
+  flex-wrap: wrap;
+  height: min-content;
 }
